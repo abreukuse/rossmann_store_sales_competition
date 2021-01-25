@@ -8,4 +8,4 @@ His solution for this competition can be found [here](https://nbviewer.jupyter.o
 
 The data needs to be [downloaded](https://www.kaggle.com/c/rossmann-store-sales/data) and stored in the `datesets` folder.
 
-The code is not ready yet, so far I got most of the data preprocessing stages done.
+The code is not ready yet, so far I got most of the data preprocessing steps done.
