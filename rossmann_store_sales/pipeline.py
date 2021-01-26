@@ -27,6 +27,11 @@ pipeline = Pipeline([
     ),
 
     (
+        'remove_closed_days',
+        FunctionTransformer(functions.remove_closed_days)
+    ),
+
+    (
         'seasonal_features',
         FunctionTransformer(functions.seasonal_features, kw_args={'date_column': config.DATE_COLUMN,
                                                                   'which_ones': config.SEASONAL_FEATURES,
@@ -34,8 +39,13 @@ pipeline = Pipeline([
     ),
 
     (
-        'convert_dates_toInt',
-        FunctionTransformer(functions.convert_dates_toInt)
+        'convert_dates_to_Int',
+        FunctionTransformer(functions.convert_dates_to_Int)
+    ),
+
+    (
+        'remove_long_ago_stores_data',
+        FunctionTransformer(functions.remove_long_ago_stores_data)
     ),
 
     (
@@ -54,12 +64,22 @@ pipeline = Pipeline([
     ),
 
     (
+        'median_based_outlier',
+        FunctionTransformer(functions.median_based_outlier, kw_args={'thresh': 3})
+    ),
+
+    (
         'to_drop',
         FunctionTransformer(functions.to_drop, kw_args={'variables': config.TO_DROP})
     ),
 
     (
-        'SimpleImputer',
-        SklearnTransformerWrapper(transformer=SimpleImputer(strategy='constant', fill_value=-1))
+        'ArbitraryNumberImputer_-9223372036854775808',
+        mdi.ArbitraryNumberImputer(arbitrary_number=-9223372036854775808, variables=['CompetitionOpenInt'])
+    ),
+
+    (
+        'ArbitraryNumberImputer_-1',
+        mdi.ArbitraryNumberImputer(arbitrary_number=-1)
     )
 ])
