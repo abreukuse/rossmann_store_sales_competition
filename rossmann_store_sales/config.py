@@ -44,4 +44,6 @@ CONVERT_TO_NUMERICAL_CATEGORIES = ['StateHoliday',
 TO_DROP = ['CompetitionOpenSinceYear',
            'CompetitionOpenSinceMonth',
            'PromoInterval',
+           'Date',
+           'DateInt',
            'Sales']                                   
