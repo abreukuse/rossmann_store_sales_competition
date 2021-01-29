@@ -35,7 +35,7 @@ pipeline = Pipeline([
         'seasonal_features',
         FunctionTransformer(functions.seasonal_features, kw_args={'date_column': config.DATE_COLUMN,
                                                                   'which_ones': config.SEASONAL_FEATURES,
-                                                                  'deliver': True})
+                                                                  'copy': True})
     ),
 
     (
