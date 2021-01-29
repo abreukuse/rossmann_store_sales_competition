@@ -51,7 +51,7 @@ def convert_dates_to_Int(X):
 
 
 def remove_long_ago_stores_data(X):
-    """Remove sales samples that are too different from the rest and from too long ago"""
+    """Remove sales samples that are too different from the rest of the data and from too long time ago"""
     indices = []
     if TARGET in X.columns: # execute in training data only
         store_dates_to_remove = {105:1.368e18, 163:1.368e18,
