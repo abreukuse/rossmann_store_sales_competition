@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 from rossmann_sales import config
+from sklearn.base import BaseEstimator, TransformerMixin
 
-train = pd.read_csv(config.DATASET_DIR / config.TRAIN)
+TRAIN = pd.read_csv(config.DATASET_DIR / config.TRAIN)
 
 def select(X, variables):
     """Select the necessary variable for the preprocessing steps"""
@@ -26,10 +27,10 @@ def convert_to_datetime(X, variables):
     return X   
 
 
-def remove_store_open_no_sales(X, target):
+def remove_store_open_no_sales(X):
     """Remove samples regeardig Store open and zero sales"""
-    if target in X.columns:
-        X = X.loc[~((X['Open'] == 1) & (train[target] == 0))]
+    if config.TARGET in X.columns:
+        X = X.loc[~((X['Open'] == 1) & (TRAIN[config.TARGET] == 0))]
         print(f'* {target} is in dataset columns. Some samples were removed')
         return X
     else:
@@ -53,7 +54,7 @@ def convert_dates_to_Int(X):
 def remove_long_ago_stores_data(X):
     """Remove sales samples that are too different from the rest of the data and from too long time ago"""
     indices = []
-    if TARGET in X.columns: # execute in training data only
+    if config.TARGET in X.columns: # execute in training data only
         store_dates_to_remove = {105:1.368e18, 163:1.368e18,
                                 172:1.366e18, 364:1.37e18,
                                 378:1.39e18, 523:1.39e18,
@@ -121,10 +122,10 @@ def PromoInterval_processing(X):
 
 def median_based_outlier(X, thresh=3):
     """Detect and remove outliers in Sales"""
-    if TARGET in X.columns:
+    if config.TARGET in X.columns:
         indices_to_remove = []
         for store in X['Store'].unique():
-            points = X.loc[X['Store'] == store, TARGET]
+            points = X.loc[X['Store'] == store, config.TARGET]
             median = np.median(points)
             modified_z_score = 0.6745 * np.abs(points - median) /  np.median(np.abs(points - median))
             boolean = modified_z_score > thresh
@@ -134,6 +135,32 @@ def median_based_outlier(X, thresh=3):
         print('* Removed outliers')
         return X
     else:
+        return X
+
+
+class SalesBasedFeatures(BaseEstimator, TransformerMixin):
+    def __ini__(self):
+        self.target_features = None
+    
+    def fit(self, X, y=None):
+        store_sales = X.groupby('Store')[config.TARGET].sum()
+        store_customers = X.groupby('Store')['Customers'].sum()
+        store_open = X.groupby('Store')['Open'].count()
+
+        sales_per_day = store_sales / store_open
+        customers_per_day = store_customers / store_open
+        sales_per_customer_per_day = sales_per_day / customers_per_day
+
+        series = [sales_per_day, customers_per_day, sales_per_customer_per_day]
+
+        self.target_features = pd.concat(series, axis=1).rename({0:'sales_per_day',
+                                                                 1:'customers_per_day',
+                                                                 2:'sales_per_customer_per_day'}, axis=1)
+        print('* Created Sales based features')
+        return self
+
+    def transform(self, X):
+        X = X.merge(self.target_features, how='left', left_on='Store', right_index=True)
         return X
 
 
