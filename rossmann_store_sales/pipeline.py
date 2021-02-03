@@ -69,6 +69,11 @@ pipeline = Pipeline([
     ),
 
     (
+        'SalesBasedFeatures',
+        SalesBasedFeatures()
+    ),
+
+    (
         'to_drop',
         FunctionTransformer(functions.to_drop, kw_args={'variables': config.TO_DROP})
     ),
