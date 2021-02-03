@@ -70,7 +70,7 @@ pipeline = Pipeline([
 
     (
         'SalesBasedFeatures',
-        SalesBasedFeatures()
+        functions.SalesBasedFeatures()
     ),
 
     (
