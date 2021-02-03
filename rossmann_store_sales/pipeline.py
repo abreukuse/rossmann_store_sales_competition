@@ -23,7 +23,7 @@ pipeline = Pipeline([
 
     (
         'remove_store_open_no_sales',
-        FunctionTransformer(functions.remove_store_open_no_sales, kw_args={'target': config.TARGET})
+        FunctionTransformer(functions.remove_store_open_no_sales)
     ),
 
     (
