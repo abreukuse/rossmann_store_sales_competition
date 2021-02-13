@@ -1,8 +1,9 @@
-from rossmann_sales import config, functions
+from rossmann_store_sales import config, functions
 from sklearn.pipeline import Pipeline
-from sklearn.compose import FunctionTransformer
+from sklearn.preprocessing import FunctionTransformer
 from sklearn.impute import SimpleImputer
 from feature_engine.wrappers import SklearnTransformerWrapper
+import feature_engine.missing_data_imputers as mdi
 from feature_engineering_time_series import seasonal_features
 
 pipeline = Pipeline([
@@ -33,9 +34,9 @@ pipeline = Pipeline([
 
     (
         'seasonal_features',
-        FunctionTransformer(functions.seasonal_features, kw_args={'date_column': config.DATE_COLUMN,
-                                                                  'which_ones': config.SEASONAL_FEATURES,
-                                                                  'copy': True})
+        FunctionTransformer(seasonal_features, kw_args={'date_column': config.DATE_COLUMN,
+                                                        'which_ones': config.SEASONAL_FEATURES,
+                                                        'copy': True})
     ),
 
     (
