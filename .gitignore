@@ -1,4 +1,7 @@
 links.txt 
+tox.ini
 rossmann_store_sales/datasets/*
-
 !rossmann_store_sales/datasets/.gitkeep
+rossmann_store_sales/__pycache__/*
+rossmann_store_sales/trained_models/*
+!rossmann_store_sales/trained_models/.gitkeep
