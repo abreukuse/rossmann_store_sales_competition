@@ -1,9 +1,8 @@
 import pandas as pd
 import numpy as np
-from rossmann_sales import config
+from rossmann_store_sales import config
 from sklearn.base import BaseEstimator, TransformerMixin
 
-TRAIN = pd.read_csv(config.DATASET_DIR / config.TRAIN)
 
 def select(X, variables):
     """Select the necessary variable for the preprocessing steps"""
@@ -15,7 +14,7 @@ def select(X, variables):
 
 def merge(X, variables):
     """Join train and Store datasets"""
-    X = pd.merge(X, store[variables], how='left', on=['Store'])
+    X = pd.merge(X, config.STORE[variables], how='left', on=['Store'])
     print('* train data merged with store dataset')
     return X 
 
@@ -30,16 +29,16 @@ def convert_to_datetime(X, variables):
 def remove_store_open_no_sales(X):
     """Remove samples regeardig Store open and zero sales"""
     if config.TARGET in X.columns:
-        X = X.loc[~((X['Open'] == 1) & (TRAIN[config.TARGET] == 0))]
-        print(f'* {target} is in dataset columns. Some samples were removed')
+        X = X.loc[~((X['Open'] == 1) & (config.TRAIN[config.TARGET] == 0))]
+        print(f'* {config.TARGET} is in dataset columns. Some samples were removed')
         return X
     else:
-        print(f'* {target} is NOT in dataset columns. None sample was removed')
+        print(f'* {config.TARGET} is NOT in dataset columns. None sample was removed')
         return X  
 
 
 def remove_closed_days(X):
-    """Only open days will ne considered"""
+    """Only open days will Be considered"""
     X = X.loc[X['Open'] == 1, :]
     return X
 
@@ -75,7 +74,7 @@ def remove_long_ago_stores_data(X):
             indices = indices + index
 
         X = X.drop(indices)
-        print(f'* Removed long ago data')
+        print(f'* Removed long time ago data')
         return X
     else:
         return X
