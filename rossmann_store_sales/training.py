@@ -11,13 +11,13 @@ def save_pipeline(*, pipeline_to_persist) -> None:
 
     remove_old_pipelines(file_to_keep=save_file_name)
     joblib.dump(pipeline_to_persist, save_path)
-    print(f'Pipeline version {_verion} saved.')
+    print(f'Pipeline version {_version} saved.')
 
 
 def remove_old_pipelines(*, file_to_keep):
     """Delete old model pipelines from the package"""
     for model_file in config.TRAINED_MODEL_DIR.iterdir():
-        if model_file.name not in [file_to_keep, '__init__.py']:
+        if model_file.name not in [file_to_keep, '__init__.py', '.gitkeep']:
             model_file.unlink()
 
 
