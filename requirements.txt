@@ -3,3 +3,5 @@ numpy==1.19.5
 scikit-learn==0.22.2.post1
 feature-engine==0.6.1
 joblib>=0.14.1,<0.15.0
+xgboost==0.90
+pytest==6.2.2
