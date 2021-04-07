@@ -6,7 +6,7 @@ import xgboost as xgb
 from rossmann_store_sales import config, pipeline, evaluation
 from rossmann_store_sales import __version__ as _version
 
-def save_pipeline(*, pipeline_to_persist, model_to_persist) -> None:
+def save_pipeline(*, pipeline_to_persist, algorithm_to_persist) -> None:
     """Persist the pipeline."""
     save_file_pipeline = f"pipeline_version_{_version}.pkl"
     save_path_pipeline = config.TRAINED_MODEL_DIR / save_file_pipeline
@@ -15,7 +15,7 @@ def save_pipeline(*, pipeline_to_persist, model_to_persist) -> None:
     save_path_model = config.TRAINED_MODEL_DIR / save_file_model
 
     joblib.dump(pipeline_to_persist, save_path_pipeline)
-    joblib.dump(model_to_persist, save_path_model)
+    joblib.dump(algorithm_to_persist, save_path_model)
 
     print(f'Pipeline version {_version} saved.')
 
@@ -34,11 +34,17 @@ def apply_pipeline_steps() -> None:
     num_round = 20000
     evallist = [(dtrain, 'train'), (dtest, 'test')]
 
-    plst = config.HYPERPARAMETERS.items()
+    hyperparameters = config.HYPERPARAMETERS.items()
 
     # training
     print('*** TRAINING... ***')
-    bst = xgb.train(plst, dtrain, num_round, evallist, feval=evaluation.rmspe_xg, verbose_eval=250, early_stopping_rounds=250)
+    algorithm = xgb.train(params=hyperparameters, 
+                          dtrain=dtrain, 
+                          nrounds=num_round, 
+                          evals=evallist, 
+                          feval=evaluation.rmspe_xg, 
+                          verbose_eval=250, 
+                          early_stopping_rounds=250)
 
     save_path_X = config.DATASET_DIR / f'training_data_preprocessed_v{_version}.csv'
     save_path_y = config.DATASET_DIR / f'target_v{_version}.csv'
@@ -49,7 +55,7 @@ def apply_pipeline_steps() -> None:
     print('Training data preprocessed was saved.')
 
     # Save pipeline
-    save_pipeline(pipeline_to_persist=pipeline.pipeline, model_to_persist=bst)
+    save_pipeline(pipeline_to_persist=pipeline.pipeline, algorithm_to_persist=algorithm)
 
 
 if __name__ == '__main__':
