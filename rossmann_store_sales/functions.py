@@ -138,6 +138,7 @@ def median_based_outlier(X, thresh=3):
 
 
 class SalesBasedFeatures(BaseEstimator, TransformerMixin):
+    """Create features from the target"""
     def __ini__(self):
         self.target_features = None
     
@@ -154,7 +155,8 @@ class SalesBasedFeatures(BaseEstimator, TransformerMixin):
 
         self.target_features = pd.concat(series, axis=1).rename({0:'sales_per_day',
                                                                  1:'customers_per_day',
-                                                                 2:'sales_per_customer_per_day'}, axis=1)
+                                                                 2:'sales_per_customer_per_day'}, 
+                                                                 axis=1)
         print('* Created Sales based features')
         return self
 
@@ -162,6 +164,10 @@ class SalesBasedFeatures(BaseEstimator, TransformerMixin):
         X = X.merge(self.target_features, how='left', left_on='Store', right_index=True)
         return X
 
+def week_to_int(X):
+    X['Date_week'] = X['Date_week'].apply(lambda x: int(x))
+    print(f'* Converting Date_week to integer')
+    return X
 
 def to_drop(X, variables):
     """Drop unnecessary variables for training"""
