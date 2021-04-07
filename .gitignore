@@ -1,5 +1,6 @@
 links.txt 
 tox.ini
+.tox/*
 rossmann_store_sales/datasets/*
 !rossmann_store_sales/datasets/.gitkeep
 rossmann_store_sales/__pycache__/*
