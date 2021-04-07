@@ -75,6 +75,12 @@ pipeline = Pipeline([
     ),
 
     (
+
+        'week_to_int',
+        FunctionTransformer(functions.week_to_int)
+    ),
+
+    (
         'to_drop',
         FunctionTransformer(functions.to_drop, kw_args={'variables': config.TO_DROP})
     ),
