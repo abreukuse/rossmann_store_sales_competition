@@ -9,4 +9,4 @@ His solution for this competition can be found [here](https://nbviewer.jupyter.o
 The data needs to be [downloaded](https://www.kaggle.com/c/rossmann-store-sales/data) and stored in the `datesets` folder.
 
 Working Progress:
-All the preprocessing steps are done. Next step is training.
+Training is done. Next step is deployment.
