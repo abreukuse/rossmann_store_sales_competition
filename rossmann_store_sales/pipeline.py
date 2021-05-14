@@ -4,7 +4,7 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.impute import SimpleImputer
 from feature_engine.wrappers import SklearnTransformerWrapper
 import feature_engine.missing_data_imputers as mdi
-from feature_engineering_time_series import seasonal_features
+from rossmann_store_sales.feature_engineering_time_series import seasonal_features
 
 pipeline = Pipeline([
     (

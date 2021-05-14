@@ -5,9 +5,27 @@ from sklearn.model_selection import train_test_split
 import xgboost as xgb
 from rossmann_store_sales import config, pipeline, evaluation
 from rossmann_store_sales import __version__ as _version
+import os, shutil
+
+def move_older_version():
+    """Move older pipeline version to another directory"""
+    pkl_file = [file for file in os.listdir(config.TRAINED_MODEL_DIR) if file.endswith('.pkl')]
+
+    if not os.path.isdir(config.OLDER_VERSIONS):
+        os.mkdir(config.OLDER_VERSIONS)
+
+    if len(pkl_file) == 1:
+        file = pkl_file[0]
+        source = config.TRAINED_MODEL_DIR
+        destination = config.OLDER_VERSIONS
+        shutil.move(f'{source}/{file}', destination)
+
 
 def save_pipeline(*, pipeline_to_persist, algorithm_to_persist) -> None:
     """Persist the pipeline."""
+
+    move_older_version()
+
     save_file_pipeline = f"pipeline_version_{_version}.pkl"
     save_path_pipeline = config.TRAINED_MODEL_DIR / save_file_pipeline
 
@@ -22,11 +40,16 @@ def save_pipeline(*, pipeline_to_persist, algorithm_to_persist) -> None:
 
 def apply_pipeline_steps() -> None:
     """Apply all the pipeline stesps in the training data"""
-    train = config.TRAIN
-    X = pipeline.pipeline.fit_transform(train)
-    y = np.log1p(train.loc[X.index, config.TARGET])
+    X = config.TRAIN
+    y = np.log1p(X.loc[X.index, config.TARGET])
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=config.TEST_SIZE, random_state=config.SEED)
+    
+    X_train = pipeline.pipeline.fit_transform(X_train)
+    X_test = pipeline.pipeline.transform(X_test)
+
+    y_train = y_train.iloc[X_train.index]
+    y_test = y_test.iloc[X_test.index]
 
     dtrain = xgb.DMatrix(X_train, y_train)
     dtest = xgb.DMatrix(X_test, y_test)
@@ -40,7 +63,7 @@ def apply_pipeline_steps() -> None:
     print('*** TRAINING... ***')
     algorithm = xgb.train(params=hyperparameters, 
                           dtrain=dtrain, 
-                          nrounds=num_round, 
+                          num_boost_round=num_round, 
                           evals=evallist, 
                           feval=evaluation.rmspe_xg, 
                           verbose_eval=250, 

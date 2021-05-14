@@ -5,6 +5,7 @@ import rossmann_store_sales
 PACKAGE_ROOT = pathlib.Path(rossmann_store_sales.__file__).resolve().parent
 DATASET_DIR = PACKAGE_ROOT / 'datasets'
 TRAINED_MODEL_DIR = PACKAGE_ROOT / 'trained_models'
+OLDER_VERSIONS = PACKAGE_ROOT / 'older_versions'
 
 SEED = 42
 
