@@ -6,3 +6,4 @@ rossmann_store_sales/datasets/*
 rossmann_store_sales/__pycache__/*
 rossmann_store_sales/trained_models/*
 !rossmann_store_sales/trained_models/.gitkeep
+rossmann_store_sales/older_versions/
