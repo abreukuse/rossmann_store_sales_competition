@@ -5,6 +5,7 @@ from sklearn.impute import SimpleImputer
 from feature_engine.wrappers import SklearnTransformerWrapper
 import feature_engine.missing_data_imputers as mdi
 from rossmann_store_sales.feature_engineering_time_series import seasonal_features
+import xgboost as xgb
 
 pipeline = Pipeline([
     (
@@ -93,5 +94,9 @@ pipeline = Pipeline([
     (
         'ArbitraryNumberImputer_-1',
         mdi.ArbitraryNumberImputer(arbitrary_number=-1)
+    ),
+    (
+        'xgboost',
+        xgb.XGBRegressor(**config.HYPERPARAMETERS)
     )
 ])

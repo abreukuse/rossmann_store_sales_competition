@@ -57,11 +57,12 @@ TO_DROP = ['CompetitionOpenSinceYear',
 		   'Customers',
 		   'Sales']   
 
-HYPERPARAMETERS = {'bst:max_depth':12,
-				   'bst:eta':0.01,
+HYPERPARAMETERS = {'n_estimators':20000,
+				   'max_depth':12,
+				   'learning_rate':0.01,
 				   'subsample':0.8,
 				   'colsample_bytree':0.7,
-				   'silent':1,
+				   'verbosity':1,
 				   'objective':'reg:linear',
-				   'nthread':6,
-				   'seed':SEED}                                   
+				   'n_jobs':-1,
+				   'random_state':SEED}                                   
