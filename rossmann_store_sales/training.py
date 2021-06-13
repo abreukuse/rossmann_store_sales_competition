@@ -66,5 +66,4 @@ def apply_pipeline_steps() -> None:
 
 
 if __name__ == '__main__':
-    # apply_pipeline_steps()
-    move_older_version()
+    apply_pipeline_steps()
